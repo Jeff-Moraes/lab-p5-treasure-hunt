@@ -1,23 +1,37 @@
 class Player {
-  constructor(col, row, color) {
+  constructor(col, row) {
     this.col = col;
     this.row = row;
     this.score = 0;
+    this.image;
   }
   moveUp() {
     this.row -= side;
+    this.image = characterUp;
   }
   moveDown() {
     this.row += side;
+    this.image = characterDown;
   }
   moveRight() {
     this.col += side;
+    this.image = characterRight;
   }
   moveLeft() {
     this.col -= side;
+    this.image = characterLeft;
+  }
+  playerScore() {
+    this.score += 100;
+    treasure.setRandomPosition();
+    treasure.drawTreasure();
+    console.log(this.score);
   }
   draw() {
-    image(characterDown, this.col, this.row, side, side);
+    image(this.image || characterDown, this.col, this.row, side, side);
+    if (this.col === treasure.col && this.row === treasure.row) {
+      this.playerScore();
+    }
   }
 }
 class Treasure {
@@ -39,51 +53,19 @@ const player2 = new Player(900, 900);
 const treasure = new Treasure();
 
 class Game {
+  constructor() {
+    this.firstPoint = 0;
+    this.secondPoint = 1000;
+    this.lines = 10;
+    this.squareHeight = 100;
+  }
   drawGrid() {
-    let positionStart = 0;
-    let positionEnd = 1000;
-    let lineCount = 10;
-    let heightSquare = positionEnd / lineCount;
-    function horizontalLines(lineCount) {
-      let lineHeightTotal = 0;
-      for (let i = 0; i <= lineCount; i++) {
-        line(positionStart, lineHeightTotal, positionEnd, lineHeightTotal);
-        stroke("white");
-        lineHeightTotal += heightSquare;
-      }
-    }
-    function verticalLines(lineCount) {
-      let lineHeightTotal = 0;
-      for (let i = 0; i <= lineCount; i++) {
-        line(lineHeightTotal, positionStart, lineHeightTotal, positionEnd);
-        stroke("white");
-        lineHeightTotal += heightSquare;
-      }
-    }
-
-    function score1() {
-      player1.score += 100;
-      treasure.setRandomPosition();
-      treasure.drawTreasure();
-      console.log(player1.score);
-    }
-    function score2() {
-      player2.score += 100;
-      treasure.setRandomPosition();
-      treasure.drawTreasure();
-      console.log(player2.score);
-    }
-
-    horizontalLines(lineCount);
-    verticalLines(lineCount);
-    treasure.drawTreasure();
-    player1.draw();
-    player2.draw();
-    if (player1.col === treasure.col && player1.row === treasure.row) {
-      score1();
-    }
-    if (player2.col === treasure.col && player2.row === treasure.row) {
-      score2();
+    let linePosition = 0;
+    for (let i = 0; i <= this.lines; i++) {
+      line(this.firstPoint, linePosition, this.secondPoint, linePosition);
+      line(linePosition, this.firstPoint, linePosition, this.secondPoint);
+      stroke("white");
+      linePosition += this.squareHeight;
     }
   }
 }
