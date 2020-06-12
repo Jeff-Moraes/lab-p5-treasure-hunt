@@ -23,13 +23,13 @@ class Player {
   }
   playerScore() {
     this.score += 100;
-    treasure.setRandomPosition();
-    treasure.drawTreasure();
+    game.treasure.setRandomPosition();
+    game.treasure.drawTreasure();
     console.log(this.score);
   }
   draw() {
     image(this.image || characterDown, this.col, this.row, side, side);
-    if (this.col === treasure.col && this.row === treasure.row) {
+    if (this.col === game.treasure.col && this.row === game.treasure.row) {
       this.playerScore();
     }
   }
@@ -47,46 +47,27 @@ class Treasure {
     image(treasureImg, this.col, this.row, side, side);
   }
 }
-let side = 100;
-const player1 = new Player(0, 0);
-const player2 = new Player(900, 900);
-const treasure = new Treasure();
 
 class Game {
   constructor() {
+    this.player1 = new Player(0, 0);
+    this.player2 = new Player(900, 900);
+    this.treasure = new Treasure();
+
     this.firstPoint = 0;
-    this.secondPoint = 1000;
+    this.secondPoint = WIDTH;
     this.lines = 10;
-    this.squareHeight = 100;
+    this.squareSize = SQUARE_SIDE;
   }
   drawGrid() {
     let linePosition = 0;
     for (let i = 0; i <= this.lines; i++) {
+      stroke("white");
       line(this.firstPoint, linePosition, this.secondPoint, linePosition);
       line(linePosition, this.firstPoint, linePosition, this.secondPoint);
-      stroke("white");
-      linePosition += this.squareHeight;
+      linePosition += this.squareSize;
     }
   }
 }
 
-function keyPressed() {
-  if (keyCode === 37 && player1.col > 0) {
-    player1.moveLeft();
-  } else if (keyCode === 39 && player1.col < 1000 - side) {
-    player1.moveRight();
-  } else if (keyCode === 40 && player1.row < 1000 - side) {
-    player1.moveDown();
-  } else if (keyCode === 38 && player1.row > 0) {
-    player1.moveUp();
-  }
-  if (keyCode === 65 && player2.col > 0) {
-    player2.moveLeft();
-  } else if (keyCode === 68 && player2.col < 1000 - side) {
-    player2.moveRight();
-  } else if (keyCode === 83 && player2.row < 1000 - side) {
-    player2.moveDown();
-  } else if (keyCode === 87 && player2.row > 0) {
-    player2.moveUp();
-  }
-}
+let side = SQUARE_SIDE;
